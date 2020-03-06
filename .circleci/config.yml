@@ -32,7 +32,7 @@ jobs:
       - run: 
           name: "Deploy to S3"
           command:
-            npm deploy
+            npm run deploy
             # aws s3 sync ~/repo s3://skand-admin-dashboard --acl public-read
 
 workflows:
