@@ -17,7 +17,7 @@ jobs:
           steps:
             - run: npm install
             - run: npm test
-            - run: npm build
+            - run: npm run-script build
   deploy:
     <<: *defaults
     steps:
@@ -32,8 +32,8 @@ jobs:
       - run: 
           name: "Deploy to S3"
           command:
-            npm run deploy
-            # aws s3 sync ~/repo s3://skand-admin-dashboard --acl public-read
+            # npm run deploy
+            aws s3 sync ~/repo s3://skand-admin-dashboard --acl public-read
 
 workflows:
     build-and-test:
