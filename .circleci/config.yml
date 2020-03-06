@@ -1,17 +1,17 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
 jobs:
-  aws-cli-example:
-    executor: aws-cli/default
+  build-and-test:
+    executor:
+      name: node/default
     steps:
       - checkout
-      - aws-cli/setup:
-          profile-name: example
-      - run: echo "Run your code here"
-orbs:
-  aws-cli: circleci/aws-cli@0.1.21
-version: 2.1
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm test
 workflows:
-  aws-cli:
-    jobs:
-      - aws-cli-example:
-          context: aws
-  version: 2
+    build-and-test:
+      jobs:
+        - build-and-test
