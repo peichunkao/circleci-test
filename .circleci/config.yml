@@ -21,6 +21,14 @@ jobs:
   deploy:
     <<: *defaults
     steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: sudo apt-get update && sudo apt-get install -y python-dev
+      - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
+      - run: sudo python get-pip.py
+      - run: sudo pip install awscli --upgrade
+      - run: aws --version
+      - run: aws s3 ls
       - run: 
           name: "Deploy to S3"
           command:
@@ -30,7 +38,9 @@ workflows:
     build-and-test:
       jobs:
         - build-and-test
-        - deploy
+        - deploy:
+            requires:
+              - build-and-test
 
 # defaults: &defaults
 #   working_directory: ~/repo
