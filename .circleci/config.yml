@@ -72,8 +72,7 @@ jobs:
       - run: 
           name: "Deploy to S3"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              aws s3 sync dist/ s3://skand-admin-dashboard --delete
+            aws s3 sync build/ s3://skand-admin-dashboard --acl public-read
 workflows:
   version: 2
   build_and_test:
