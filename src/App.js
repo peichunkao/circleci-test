@@ -8,7 +8,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1>skand-admin-dashboard</h1>
-        <h2>deploy to s3 with CircleCI</h2>
+        <h2>deploy website to s3 with CircleCI</h2>
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
