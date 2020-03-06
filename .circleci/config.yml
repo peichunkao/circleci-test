@@ -1,14 +1,8 @@
-defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: circleci/node:8.11
-
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
   build-and-test:
-    <<: *defaults
     executor:
       name: node/default
     steps:
@@ -17,35 +11,11 @@ jobs:
           steps:
             - run: npm install
             - run: npm test
-            - run: npm run-script build
-      - save_cache:
-          key: source-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - "~/repo"
-  deploy:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run: sudo apt-get update && sudo apt-get install -y python-dev
-      - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
-      - run: sudo python get-pip.py
-      - run: sudo pip install awscli --upgrade
-      - run: aws --version
-      - run: aws s3 ls
-      - run: 
-          name: "Deploy to S3"
-          command:
-            # npm run deploy
-            aws s3 sync ~/repo s3://skand-admin-dashboard --acl public-read
-
+            - run: npm deploy
 workflows:
     build-and-test:
       jobs:
         - build-and-test
-        - deploy:
-            requires:
-              - build-and-test
 
 # defaults: &defaults
 #   working_directory: ~/repo
