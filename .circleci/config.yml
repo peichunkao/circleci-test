@@ -28,7 +28,7 @@ workflows:
       jobs:
         - build-and-test:
             context: Skand-S3
-        - deploy-to-s3-staging:
+        - deploy-to-s3:
             context: Skand-S3
             requires:
               - test-and-build-staging
