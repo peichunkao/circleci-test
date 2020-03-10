@@ -47,10 +47,8 @@ jobs:
 workflows:
     build-and-test:
       jobs:
-        - build-and-test:
-            context: Skand-S3
+        - build-and-test
         - deploy-to-s3:
-            context: Skand-S3
             requires:
               - build-and-test
             filters:
