@@ -43,7 +43,7 @@ jobs:
       - aws-cli/setup
       - run:
           name: Upload file to S3
-          command: aws s3 sync build/ s3://skand-admin-dashboard --acl public-read
+          command: npm run aws s3 sync build/ s3://skand-admin-dashboard --acl public-read
 workflows:
     build-and-test:
       jobs:
