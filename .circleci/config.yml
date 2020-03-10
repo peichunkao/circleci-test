@@ -9,11 +9,32 @@ jobs:
       - image: circleci/node:10.15.3
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run: npm install
-            - run: npm test
-            # - run: npm run build && aws s3 sync build/ s3://skand-admin-dashboard --acl public-read
+      - setup_remote_docker
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      # - run:
+      #     name: Test the application
+      #     command: yarn test
+      # - run:
+      #     name: Setup Platform API url
+      #     command: sh ./scripts/setup_dotenv.sh
+      - run:
+          name: Build the application
+          command: yarn build
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - package.json
+            - node_modules
+            - src
+            - build
   deploy-to-s3:
     executor: aws-cli/default
     steps:
