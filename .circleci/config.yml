@@ -1,21 +1,59 @@
 version: 2.1
+
 orbs:
-  node: circleci/node@1.1.6
+  aws-cli: circleci/aws-cli@0.1.20
+
 jobs:
   build-and-test:
-    executor:
-      name: node/default
+    docker:
+      - image: circleci/node:10.15.3
     steps:
       - checkout
       - node/with-cache:
           steps:
             - run: npm install
             - run: npm test
-            - run: npm run deploy
+            # - run: npm run build && aws s3 sync build/ s3://skand-admin-dashboard --acl public-read
+  deploy-to-s3:
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: .
+      - aws-cli/setup
+      - run:
+          name: Upload file to S3
+          command: aws s3 sync build/ s3://skand-admin-dashboard --acl public-read
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - build-and-test:
+            context: Skand-S3
+        - deploy-to-s3-staging:
+            context: Skand-S3
+            requires:
+              - test-and-build-staging
+            filters:
+              branches:
+                only: master
+
+# version: 2.1
+# orbs:
+#   node: circleci/node@1.1.6
+# jobs:
+#   build-and-test:
+#     executor:
+#       name: node/default
+#     steps:
+#       - checkout
+#       - node/with-cache:
+#           steps:
+#             - run: npm install
+#             - run: npm test
+#             - run: npm run deploy
+# workflows:
+#     build-and-test:
+#       jobs:
+#         - build-and-test
 
 # defaults: &defaults
 #   working_directory: ~/repo
