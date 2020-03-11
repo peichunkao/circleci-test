@@ -19,11 +19,11 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
+      - run:
+          name: Test the application
+          command: yarn test
       # - run:
-      #     name: Test the application
-      #     command: yarn test
-      # - run:
-      #     name: Setup Platform API url
+      #     name: Setup AWS access id, key, region and bucket name.
       #     command: sh ./scripts/setup_dotenv.sh
       - run:
           name: Build the application
